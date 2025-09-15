@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: tattvam-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=tattvam-secret-key-2024
+    volumes:
+      - ./backend:/app
+    networks:
+      - tattvam-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: tattvam-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - tattvam-network
+    restart: unless-stopped
+
+  # Optional: Add a database service
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: tattvam-db
+  #   environment:
+  #     POSTGRES_DB: tattvam
+  #     POSTGRES_USER: tattvam_user
+  #     POSTGRES_PASSWORD: tattvam_password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - tattvam-network
+  #   restart: unless-stopped
+
+networks:
+  tattvam-network:
+    driver: bridge
+
+# volumes:
+#   postgres_data:
