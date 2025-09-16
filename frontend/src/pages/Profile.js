@@ -19,7 +19,7 @@ const Profile = () => {
 
   const { data: profile, isLoading } = useQuery(
     'profile',
-    () => api.get('/profile').then(res => res.data),
+    () => api.get('/auth/me').then(res => res.data),
     { enabled: !!user }
   );
 
